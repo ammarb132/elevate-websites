@@ -11,7 +11,7 @@
   onScroll();
 
   /* scroll-reveal */
-  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".sec-head, .grid > .card, .grid > .tile, .steps > .step, .stats, .start-card, .contact-strip"));
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".sec-head, .proof-strip, .grid > .card, .grid > .tile, .steps > .step, .stats, .start-card, .contact-strip"));
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
