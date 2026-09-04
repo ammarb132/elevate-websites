@@ -11,6 +11,19 @@
   var bands = Array.prototype.slice.call(document.querySelectorAll(".band"));
   if (!hero || !stage || !heroEl || !nav) return;
   hero.style.pointerEvents = "none";
+  hero.controls = false;
+  hero.disablePictureInPicture = true;
+  hero.setAttribute("controlsList", "nodownload nofullscreen noremoteplayback noplaybackrate");
+
+  /* Safari may paint a start-playback button over a paused inline video even
+     when controls are absent. These previews are scroll-driven and the video
+     is aria-hidden, so keep the media chrome out of the visual altogether. */
+  var nativeChromeStyle = document.createElement("style");
+  nativeChromeStyle.textContent =
+    "#hero::-webkit-media-controls, #hero::-webkit-media-controls-panel, " +
+    "#hero::-webkit-media-controls-overlay-play-button, " +
+    "#hero::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none !important; }";
+  document.head.appendChild(nativeChromeStyle);
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
@@ -94,6 +107,9 @@
     reverse.preload = "auto";
     reverse.tabIndex = -1;
     reverse.setAttribute("aria-hidden", "true");
+    reverse.setAttribute("playsinline", "");
+    reverse.setAttribute("webkit-playsinline", "");
+    reverse.setAttribute("controlsList", "nodownload nofullscreen noremoteplayback noplaybackrate");
     reverse.src = sourcePath.replace(/hero-scrub\.mp4([?#].*)?$/, "hero-scrub-reverse.mp4$1");
     setVideoLayer(reverse, 0);
     hero.parentNode.insertBefore(reverse, hero.nextSibling);
@@ -212,8 +228,9 @@
     }
   }
 
-  /* iOS permits muted inline media after a real touch. Unlock it there, then
-     the same continuous forward/reverse controller handles scroll direction. */
+  /* iOS permits muted inline media after a real touch. Never call load() in
+     this handler: resetting a video after the gesture can bring back Safari's
+     native play overlay. If it is still buffering, retry play at canplay. */
   function unlockTouchPlayback() {
     if (!isTouch) return;
     hero.muted = true;
@@ -221,8 +238,15 @@
     hero.setAttribute("muted", "");
     hero.setAttribute("playsinline", "");
     hero.setAttribute("webkit-playsinline", "");
-    if (hero.readyState < 2) hero.load();
+    if (hero.readyState < 2) {
+      hero.addEventListener("canplay", function () {
+        safelyPlay(active);
+        scheduleTick();
+      }, { once: true });
+      return;
+    }
     safelyPlay(active);
+    scheduleTick();
   }
 
   function ready() {
