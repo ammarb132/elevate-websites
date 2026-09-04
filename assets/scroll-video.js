@@ -1,5 +1,5 @@
 /* Shared scroll-video controller for the six client previews.
-   Desktop scroll uses continuous video playback instead of repeated seeking.
+   All scroll modes use continuous video playback instead of repeated seeking.
    A reversed companion clip keeps upward scrolling continuous too. */
 (function () {
   "use strict";
@@ -24,11 +24,6 @@
   var animationRaf = null;
   var navSolid = false;
   var didReady = false;
-
-  if (isTouch) {
-    document.documentElement.classList.add("scroll-video-touch");
-    heroEl.style.height = "145svh";
-  }
 
   function clamp(value, low, high) {
     return Math.min(high, Math.max(low, value));
@@ -117,7 +112,7 @@
   }
 
   function scheduleTick() {
-    if (animationRaf === null && heroOnScreen && !reduceMotion && !isTouch) {
+    if (animationRaf === null && heroOnScreen && !reduceMotion) {
       animationRaf = requestAnimationFrame(tick);
     }
   }
@@ -168,7 +163,7 @@
 
   function tick() {
     animationRaf = null;
-    if (!heroOnScreen || reduceMotion || isTouch || !hero.duration || hero.duration === Infinity) return;
+    if (!heroOnScreen || reduceMotion || !hero.duration || hero.duration === Infinity) return;
     if (switching) {
       scheduleTick();
       return;
@@ -216,26 +211,15 @@
     }
   }
 
-  function startMobileLoop() {
-    hero.autoplay = true;
-    hero.loop = true;
+  /* iOS permits muted inline media after a real touch. Unlock it there, then
+     the same continuous forward/reverse controller handles scroll direction. */
+  function unlockTouchPlayback() {
+    if (!isTouch) return;
     hero.muted = true;
     hero.defaultMuted = true;
-    hero.setAttribute("autoplay", "");
-    hero.setAttribute("loop", "");
     hero.setAttribute("muted", "");
     hero.setAttribute("playsinline", "");
-    hero.playbackRate = 1;
-    function retryPlay() { safelyPlay(hero); }
-    retryPlay();
-    hero.addEventListener("canplay", retryPlay, { once: true });
-    window.addEventListener("pageshow", retryPlay, { once: true });
-    document.addEventListener("visibilitychange", function () {
-      if (!document.hidden) retryPlay();
-    });
-    document.addEventListener("pointerdown", retryPlay, { once: true, passive: true });
-    document.addEventListener("touchstart", retryPlay, { once: true, passive: true });
-    stage.classList.add("video-ready");
+    safelyPlay(active);
   }
 
   function ready() {
@@ -244,11 +228,6 @@
     stage.classList.add("video-ready");
     targetProgress = heroProgress();
     updateCaptions(targetProgress);
-
-    if (isTouch) {
-      startMobileLoop();
-      return;
-    }
 
     setVideoLayer(hero, 1);
     try {
@@ -275,7 +254,12 @@
     return;
   }
 
-  if (!isTouch) createReverseVideo();
+  createReverseVideo();
+
+  if (isTouch) {
+    document.addEventListener("pointerdown", unlockTouchPlayback, { once: true, passive: true });
+    document.addEventListener("touchstart", unlockTouchPlayback, { once: true, passive: true });
+  }
 
   if (hero.readyState >= 3) ready();
   else {
