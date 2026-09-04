@@ -10,6 +10,7 @@
   var nav = document.getElementById("nav");
   var bands = Array.prototype.slice.call(document.querySelectorAll(".band"));
   if (!hero || !stage || !heroEl || !nav) return;
+  hero.style.pointerEvents = "none";
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
@@ -219,6 +220,8 @@
     hero.defaultMuted = true;
     hero.setAttribute("muted", "");
     hero.setAttribute("playsinline", "");
+    hero.setAttribute("webkit-playsinline", "");
+    if (hero.readyState < 2) hero.load();
     safelyPlay(active);
   }
 
