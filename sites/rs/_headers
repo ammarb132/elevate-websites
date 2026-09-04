@@ -1,0 +1,20 @@
+# Static site security headers for Cloudflare Pages / Netlify / static hosts.
+# Copy the relevant block to your host's headers config or _headers (Netlify/CF Pages).
+
+# Netlify / Cloudflare Pages: _headers file
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; frame-ancestors 'self'; connect-src 'self'
+/assets/video/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/img/*
+  Cache-Control: public, max-age=2592000
+
+# Apache (.htaccess) equivalent if hosted on shared/hPanel:
+#   Header always set X-Content-Type-Options "nosniff"
+#   Header always set X-Frame-Options "SAMEORIGIN"
+#   Header always set Referrer-Policy "strict-origin-when-cross-origin"
+#   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"

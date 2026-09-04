@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevate · Logo 233 + variants</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:14px/1.5 -apple-system,Inter,sans-serif;background:#fdfcf9;color:#131418;padding:44px 26px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font:600 28px Georgia,serif;margin-bottom:6px}
+p{color:#5e6472;max-width:680px;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.a{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 10px 14px;background:#fff;border:1px solid #ece8df;border-radius:16px;cursor:pointer;transition:transform .12s,border-color .12s}
+.a:hover{transform:translateY(-3px);border-color:#ff6b3d}
+.a img{width:74px;height:74px}
+.a b{font-size:13px}
+.a span{font-size:11px;color:#989dab;text-align:center}
+.cur{border:2px solid #ff6b3d}
+.banner{display:flex;gap:18px;align-items:center;background:#fff;border:1px solid #ece8df;border-radius:16px;padding:22px;margin-bottom:26px}
+.banner img{width:96px;height:96px}
+.banner b{font-size:20px}
+</style></head><body><div class="wrap">
+<h1>Your logo: 233</h1>
+<div class="banner"><img src="assets/logos/gen/gen-233.svg" alt="logo 233"><div><b>233 · E with wave</b><br><span style="color:#5e6472">Applied everywhere now (nav, footer, favicon). Below are 14 variants of it with small cool accents — tell me a number to swap it instantly.</span></div></div>
+<div class="grid" id="g"></div>
+</div>
+<script>
+const V={257:["plain (exact 233)","cur"],258:["star · top-right",""],259:["star · top-left",""],260:["mini star",""],
+261:["dot",""],262:["orbit ring",""],263:["small arrow",""],264:["star + dot",""],265:["diamond",""],
+266:["twin stars",""],267:["comet trail",""],268:["spark bottom-right",""],269:["orbit + E accent",""],270:["plus",""]};
+document.getElementById("g").innerHTML=Object.entries(V).map(([n,[name,cur]])=>`<div class="a ${cur}" onclick="open('assets/logos/gen/gen-'+n+'.svg')"><img src="assets/logos/gen/gen-${n}.svg" alt="logo ${n}"><b>${n}</b><span>${name}</span></div>`).join("");
+</script>
+</body></html>
