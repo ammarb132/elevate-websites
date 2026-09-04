@@ -91,7 +91,7 @@ address{font-style:normal}
 .hero-stage{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center}
 .poster{position:absolute;inset:0;background-size:cover;background-position:center}
 #hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease;will-change:transform;transform:translateZ(0);pointer-events:none}
-#hero::-webkit-media-controls,#hero::-webkit-media-controls-enclosure,#hero::-webkit-media-controls-overlay-play-button{display:none!important}
+#hero::-webkit-media-controls,#hero::-webkit-media-controls-enclosure,#hero::-webkit-media-controls-panel,#hero::-webkit-media-controls-overlay-play-button,#hero::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none!important}
 .hero-stage.video-ready #hero{opacity:1}
 .hero-stage.video-ready .poster{opacity:0;transition:opacity .5s ease}
 .scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(13,8,3,0) 30%,rgba(13,8,3,.64) 100%)}
