@@ -25,6 +25,11 @@
   var navSolid = false;
   var didReady = false;
 
+  if (isTouch) {
+    document.documentElement.classList.add("scroll-video-touch");
+    heroEl.style.height = "145svh";
+  }
+
   function clamp(value, low, high) {
     return Math.min(high, Math.max(low, value));
   }
@@ -215,7 +220,21 @@
     hero.autoplay = true;
     hero.loop = true;
     hero.muted = true;
-    safelyPlay(hero);
+    hero.defaultMuted = true;
+    hero.setAttribute("autoplay", "");
+    hero.setAttribute("loop", "");
+    hero.setAttribute("muted", "");
+    hero.setAttribute("playsinline", "");
+    hero.playbackRate = 1;
+    function retryPlay() { safelyPlay(hero); }
+    retryPlay();
+    hero.addEventListener("canplay", retryPlay, { once: true });
+    window.addEventListener("pageshow", retryPlay, { once: true });
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) retryPlay();
+    });
+    document.addEventListener("pointerdown", retryPlay, { once: true, passive: true });
+    document.addEventListener("touchstart", retryPlay, { once: true, passive: true });
     stage.classList.add("video-ready");
   }
 

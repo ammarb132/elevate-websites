@@ -26,7 +26,8 @@
 
   /* hero orb follows the pointer */
   var orb = document.querySelector(".orb");
-  if (orb) {
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (orb && finePointer) {
     var hero = document.querySelector(".hero");
     var raf = null;
     hero.addEventListener("pointermove", function (e) {

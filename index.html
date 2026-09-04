@@ -224,6 +224,7 @@
 <script>
 (function(){
   function mode(){ return document.documentElement.getAttribute('data-bgmode') || 'dark'; }
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   // camera tilt stage: wraps the cloud canvas so we can tilt it in 3D
   var stage = document.createElement('div');
@@ -241,7 +242,7 @@
     try {
       window.__vanta = VANTA['CLOUDS']({
         el: tilt,
-        mouseControls: true, touchControls: true, gyroControls: false,
+        mouseControls: finePointer, touchControls: false, gyroControls: false,
         minHeight: 200.0, minWidth: 200.0,
         color: 0xff6b3d, backgroundColor: 0x0d0f16,
       });
@@ -269,7 +270,7 @@
       tiltRaf = null;
     }
   }
-  document.addEventListener('mousemove', onTilt, { passive: true });
+  if (finePointer) document.addEventListener('mousemove', onTilt, { passive: true });
 
   function setMode(m){ document.documentElement.setAttribute('data-bgmode', m); }
   function updateLabel(){ var b = document.getElementById('cloudModeBtn'); if (b) b.textContent = (mode() === 'dark') ? '☀️ Light grey top' : '🌙 Dark top'; }
@@ -301,6 +302,7 @@
 
 /* cursify canvas-cursor port (vanilla) — hue matched per page */
 (function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   function Phase(e) { this.phase = e.phase || 0; this.offset = e.offset || 0; this.frequency = e.frequency || 0.001; this.amplitude = e.amplitude || 1; }
   Phase.prototype.update = function () { this.phase += this.frequency; return this.offset + Math.sin(this.phase) * this.amplitude; };
   function Node() { this.x = 0; this.y = 0; this.vx = 0; this.vy = 0; }
@@ -373,8 +375,6 @@
     ctx = cv.getContext('2d'); ctx.running = true; ctx.frame = 1;
     f = new Phase({ phase: Math.random() * 2 * Math.PI, amplitude: 85, frequency: 0.0015, offset: 0 });
     document.addEventListener('mousemove', onMove, { passive: true });
-    document.addEventListener('touchstart', onMove, { passive: true });
-    document.addEventListener('touchmove', onMove, { passive: true });
     window.addEventListener('resize', resize);
     resize();
     prime();
