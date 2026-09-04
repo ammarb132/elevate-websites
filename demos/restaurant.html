@@ -22,7 +22,12 @@
   .nav-toggle{width:44px!important;height:44px!important;min-width:44px!important}
   .hero{min-height:auto!important;padding-top:48px!important;padding-bottom:38px!important}
   .stage,.hero-visual{max-width:360px!important}
-  .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ }
+ @media (hover:none),(pointer:coarse){
+  .stage{height:300px!important;perspective:none!important;transform:none!important}
+  .stage *,.marq .track{animation:none!important;transform:none!important}
+  h1.mega *,.kicker,.hero p.sub,.hero-btns,.reveal{opacity:1!important;transform:none!important}
  }
 </style>
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
@@ -350,7 +355,8 @@
   // gentle parallax on burger stage
   var stage = document.querySelector('.stage');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (stage && !reduce){
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (stage && !reduce && fine){
     addEventListener('scroll', function(){
       var y = Math.min(scrollY, 600);
       stage.style.transform = 'translateY(' + y*0.12 + 'px)';

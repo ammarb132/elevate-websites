@@ -22,7 +22,12 @@
   .nav-toggle{width:44px!important;height:44px!important;min-width:44px!important}
   .hero{min-height:auto!important;padding-top:48px!important;padding-bottom:38px!important}
   .stage,.hero-visual{max-width:360px!important}
-  .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ }
+ @media (hover:none),(pointer:coarse){
+  .stage{min-height:300px!important;perspective:none!important}
+  .stage *,.marq .track{animation:none!important;transform:none!important}
+  h1.mega *,.badge,.hero p.sub,.hero-btns,.trust-row,.reveal{opacity:1!important;transform:none!important}
  }
 </style>
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
@@ -291,6 +296,7 @@
 <script>
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   // rising bubbles in hero
   var bwrap = document.getElementById('bubbles');
@@ -334,7 +340,7 @@
 
   // 3D tilt on quote card
   var tilt = document.getElementById('tilt3d');
-  if (tilt && !reduce){
+  if (tilt && !reduce && fine){
     document.querySelector('.hero').addEventListener('mousemove', function(e){
       var r = tilt.getBoundingClientRect();
       var cx = r.left + r.width/2, cy = r.top + r.height/2;

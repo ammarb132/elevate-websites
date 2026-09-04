@@ -22,7 +22,12 @@
   .nav-toggle{width:44px!important;height:44px!important;min-width:44px!important}
   .hero{min-height:auto!important;padding-top:48px!important;padding-bottom:38px!important}
   .stage,.hero-visual{max-width:360px!important}
-  .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ .bigbtn,.btn{min-height:48px!important;align-items:center!important;justify-content:center!important}
+ }
+ @media (hover:none),(pointer:coarse){
+  .hero-visual{max-height:360px!important;perspective:none!important}
+  .hero-visual *{animation:none!important;transform:none!important}
+  .reveal{opacity:1!important;transform:none!important}
  }
 </style>
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
@@ -541,6 +546,7 @@ footer{background:var(--dark);color:#B7BDCC;border-top:1px solid var(--border-da
 
 <script>
 (function(){
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var toggle = document.getElementById('navToggle');
   var links = document.getElementById('navLinks');
   if(toggle){
@@ -557,17 +563,24 @@ footer{background:var(--dark);color:#B7BDCC;border-top:1px solid var(--border-da
   }
 
   /* mouse-follow spotlight on service cards */
-  document.querySelectorAll('.svc-card').forEach(function(card){
+  if (fine) document.querySelectorAll('.svc-card').forEach(function(card){
+    var cardRaf = 0, cardX = 0, cardY = 0;
     card.addEventListener('mousemove', function(e){
       var r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      cardX = e.clientX - r.left;
+      cardY = e.clientY - r.top;
+      if (cardRaf) return;
+      cardRaf = requestAnimationFrame(function(){
+        card.style.setProperty('--mx', cardX + 'px');
+        card.style.setProperty('--my', cardY + 'px');
+        cardRaf = 0;
+      });
     });
   });
 
   /* subtle interactive tilt + halo drift on hero photo */
   var hv = document.querySelector('.hero-visual'), hp = hv && hv.querySelector('.hero-photo'), halo = hv && hv.querySelector('.halo');
-  if (hv && hp && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(pointer:fine)').matches){
+  if (hv && hp && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && fine){
     hp.style.transition = 'transform .18s ease-out';
     hv.addEventListener('mousemove', function(e){
       var r = hv.getBoundingClientRect();
