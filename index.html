@@ -210,12 +210,12 @@
 <style id="bgfx-style">body,html{background:transparent!important}.hero::before{display:none!important}.hero{background:transparent!important}.orb{display:none!important}.nav{background:rgba(255,255,255,.6);backdrop-filter:blur(14px)}html[data-theme="dark"] .nav{background:rgba(18,18,22,.6)}#bgfx{position:fixed;inset:0;z-index:-2;pointer-events:none}#scrim{position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgba(12,14,20,.44)}#bgfx{background:#0d0f16; min-height:100vh}</style>
 <div id="bgfx" aria-hidden="true"></div>
 <div id="scrim" aria-hidden="true"></div>
-<script>document.documentElement.setAttribute("data-theme", "dark");document.documentElement.setAttribute("data-bgmode", "light");</script>
+<script>document.documentElement.setAttribute("data-theme", "dark");document.documentElement.setAttribute("data-bgmode", "dark");</script>
 <script>window.__bgErr = null; window.addEventListener("error", function(e){ window.__bgErr = (window.__bgErr ? window.__bgErr + " | " : "") + (e.message||e.type); });</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
 <script>
 (function(){
-  function mode(){ return document.documentElement.getAttribute('data-bgmode') || 'light'; }
+  function mode(){ return document.documentElement.getAttribute('data-bgmode') || 'dark'; }
 
   // camera tilt stage: wraps the cloud canvas so we can tilt it in 3D
   var stage = document.createElement('div');
